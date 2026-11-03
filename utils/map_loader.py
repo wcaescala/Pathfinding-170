@@ -4,9 +4,23 @@
 import numpy as np
 from pathlib import Path # Standard library import
 from typing import Iterable # Standard library import
+import math
 from dataclasses import dataclass
 
 DEFAULT_PASSABLE = frozenset(".GS")
+SQRT2 = math.sqrt(2)
+
+# 8-direction movements: (dx, dy, cost)
+_MOVES = (
+    (0, -1, 1.0),    # North
+    (0, 1, 1.0),     # South
+    (-1, 0, 1.0),    # West
+    (1, 0, 1.0),     # East
+    (-1, -1, SQRT2), # North-West
+    (1, -1, SQRT2),  # North-East
+    (-1, 1, SQRT2),  # South-West
+    (1, 1, SQRT2),   # South-East
+)
 
 @dataclass
 class GridMap:
