@@ -65,6 +65,15 @@ def compute_path_cost(path: List[Coordinate]) -> float:
 
     return total_cost
 
+def octile_distance(a: Coordinate, b: Coordinate) -> float:
+    """
+    Computes the octile (heuristic) distance between two coordinates.
+    Made for 8-connected grids with cardinal=1.0 and diagonal=sqrt(2).
+    """
+    dx = abs(a[0] - b[0])
+    dy = abs(a[1] - b[1])
+    
+    return (dx + dy) + (SQRT2 - 2.0) * min(dx, dy)
 
 def validate_path(
     grid_map: Any,
