@@ -17,6 +17,9 @@ if str(PROJECT_ROOT) not in sys.path:
 from utils.map_loader import load_map, GridMap
 from algorithms.bfs import bfs
 from algorithms.dfs import dfs
+from algorithms.dijkstra import dijkstra
+from algorithms.a_star import a_star
+from algorithms.gbfs import gbfs
 from evaluation.sampler import BenchmarkSampler, SampledScenario
 from evaluation.metrics import (
     ScenarioEvaluationRecord,
@@ -165,6 +168,9 @@ def main():
     algos = {
         "BFS": bfs,
         "DFS": dfs,
+        "Dijkstra": dijkstra,
+        "A*": a_star,
+        "GBFS": gbfs,
     }
 
     # If no maps specified, default to a compact representative set for quick CLI runs
