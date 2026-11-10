@@ -1,0 +1,9 @@
+,success_pct,success_pct,success_pct,time_median_ms,time_median_ms,time_median_ms,expanded_median,expanded_median,expanded_median
+size_tier,large,medium,small,large,medium,small,large,medium,small
+algorithm,,,,,,,,,
+astar,100.0,100.0,100.0,1.938,3.826,0.315,134.0,241.5,28.5
+bfs,100.0,100.0,100.0,9.926,16.7,2.599,1041.0,1518.0,441.5
+dfs,100.0,100.0,100.0,149.307,17.637,7.425,15444.0,1475.5,1242.0
+dijkstra,100.0,100.0,100.0,12.752,18.196,3.702,1133.5,1432.5,450.5
+gbfs,100.0,100.0,100.0,0.633,0.933,0.238,31.0,63.0,23.0
+jps,100.0,100.0,100.0,4.181,4.902,1.023,6.5,9.5,6.5

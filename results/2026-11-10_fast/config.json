@@ -1,0 +1,30 @@
+{
+  "run_id": "2026-11-10_fast",
+  "seed": 42,
+  "k": 2,
+  "maps": [
+    "ht_store.map",
+    "lt_foundry_n.map",
+    "ht_playershouse_n.map",
+    "ca_cave.map",
+    "ht_keep.map",
+    "w_encounter1.map",
+    "lt_0_lowtown.map",
+    "w_woundedcoast.map",
+    "dr_0_deeproads.map"
+  ],
+  "algorithms": [
+    "bfs",
+    "dfs",
+    "dijkstra",
+    "gbfs",
+    "astar",
+    "jps"
+  ],
+  "repeats": 3,
+  "timeout_s": 5.0,
+  "max_nodes": 100000,
+  "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "platform": "linux",
+  "git_commit": "1fb3e2551ef91a4dd97638b5f9945bf8d2a748bb"
+}
