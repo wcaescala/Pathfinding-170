@@ -43,34 +43,30 @@ def dijkstra(
 	gx, gy = goal
 
 	if not grid_map.in_bounds(sx, sy) or not grid_map.is_passable(sx, sy):
-		elapsed_ms = (perf_counter() - start_time) * 1000.0
 		return SearchResult(
-			algorithm="Dijkstra",
-			found=False,
-			execution_time_ms=elapsed_ms,
-			error_message=f"Start position {start} is out of bounds or impassable."
+			path=None,
+			expanded=0,
+			generated=0,
+			peak_frontier=0,
+			status="no_path"
 		)
 
 	if not grid_map.in_bounds(gx, gy) or not grid_map.is_passable(gx, gy):
-		elapsed_ms = (perf_counter() - start_time) * 1000.0
 		return SearchResult(
-			algorithm="Dijkstra",
-			found=False,
-			execution_time_ms=elapsed_ms,
-			error_message=f"Goal position {goal} is out of bounds or impassable."
+			path=None,
+			expanded=0,
+			generated=0,
+			peak_frontier=0,
+			status="no_path"
 		)
 
 	if start == goal:
-		elapsed_ms = (perf_counter() - start_time) * 1000.0
 		return SearchResult(
-			algorithm="Dijkstra",
-			found=True,
 			path=[start],
-			path_cost=0.0,
-			nodes_explored=0,
-			nodes_generated=1,
-			execution_time_ms=elapsed_ms,
-			max_frontier_size=1
+			expanded=0,
+			generated=1,
+			peak_frontier=1,
+			status="ok"
 		)
 
 	# Min-Heap: stores (path_cost, coordinates)
@@ -89,28 +85,22 @@ def dijkstra(
 		# Check timeout limit
 		if timeout_seconds is not None:
 			if (perf_counter() - start_time) >= timeout_seconds:
-				elapsed_ms = (perf_counter() - start_time) * 1000.0
 				return SearchResult(
-					algorithm="Dijkstra",
-					found=False,
-					nodes_explored=nodes_explored,
-					nodes_generated=nodes_generated,
-					execution_time_ms=elapsed_ms,
-					max_frontier_size=max_frontier_size,
-					error_message=f"Timeout reached ({timeout_seconds:.2f}s)"
+					path=None,
+					expanded=nodes_explored,
+					generated=nodes_generated,
+					peak_frontier=max_frontier_size,
+					status="timeout"
 				)
 
 		# Check node exploration limit
 		if max_nodes is not None and nodes_explored >= max_nodes:
-			elapsed_ms = (perf_counter() - start_time) * 1000.0
 			return SearchResult(
-				algorithm="Dijkstra",
-				found=False,
-				nodes_explored=nodes_explored,
-				nodes_generated=nodes_generated,
-				execution_time_ms=elapsed_ms,
-				max_frontier_size=max_frontier_size,
-				error_message=f"Node expansion limit reached ({max_nodes} nodes)"
+				path=None,
+				expanded=nodes_explored,
+				generated=nodes_generated,
+				peak_frontier=max_frontier_size,
+				status="node_limit"
 			)
 
 		# Pop the smallest(root) path_cost from the min_heap
@@ -146,17 +136,13 @@ def dijkstra(
 		if len(min_heap) > max_frontier_size:
 			max_frontier_size = len(min_heap)
 
-	elapsed_ms = (perf_counter() - start_time) * 1000.0
-
 	if not path_found:
 		return SearchResult(
-			algorithm="Dijkstra",
-			found=False,
-			nodes_explored=nodes_explored,
-			nodes_generated=nodes_generated,
-			execution_time_ms=elapsed_ms,
-			max_frontier_size=max_frontier_size,
-			error_message="No path exists between start and goal."
+			path=None,
+			expanded=nodes_explored,
+			generated=nodes_generated,
+			peak_frontier=max_frontier_size,
+			status="no_path"
 		)
 
 	# Reconstruct path from parent pointers
@@ -167,16 +153,11 @@ def dijkstra(
 		curr = parent.get(curr)
 	path.reverse()
 
-	path_cost = compute_path_cost(path)
-
 	return SearchResult(
-		algorithm="Dijkstra",
-		found=True,
 		path=path,
-		path_cost=path_cost,
-		nodes_explored=nodes_explored,
-		nodes_generated=nodes_generated,
-		execution_time_ms=elapsed_ms,
-		max_frontier_size=max_frontier_size
+		expanded=nodes_explored,
+		generated=nodes_generated,
+		peak_frontier=max_frontier_size,
+		status="ok"
 	)
 
