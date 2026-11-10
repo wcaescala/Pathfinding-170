@@ -1,0 +1,19 @@
+# Pathfinding-170 Benchmark Dependencies
+# Install with: pip install -r requirements.txt
+
+# Data processing and analysis
+pandas>=1.5.0
+numpy>=1.23.0
+
+# Plotting and visualization
+matplotlib>=3.6.0
+seaborn>=0.12.0
+
+# Table formatting
+tabulate>=0.9.0
+
+# Statistical tests
+scipy>=1.10.0
+
+# Testing (optional, for running tests)
+pytest>=7.0.0
