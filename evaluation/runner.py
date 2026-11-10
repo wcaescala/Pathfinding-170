@@ -20,6 +20,7 @@ from algorithms.dfs import dfs
 from algorithms.dijkstra import dijkstra
 from algorithms.a_star import a_star
 from algorithms.gbfs import gbfs
+from algorithms.jump_point import jump_point_search
 from evaluation.sampler import BenchmarkSampler, SampledScenario
 from evaluation.metrics import (
     ScenarioEvaluationRecord,
@@ -171,6 +172,7 @@ def main():
         "Dijkstra": dijkstra,
         "A*": a_star,
         "GBFS": gbfs,
+        "JPS": jump_point_search,
     }
 
     # If no maps specified, default to a compact representative set for quick CLI runs
