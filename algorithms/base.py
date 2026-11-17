@@ -25,6 +25,30 @@ class SearchResult:
     peak_frontier: int                # max frontier size
     status: str                       # "ok" | "timeout" | "node_limit" | "no_path"
 
+    @property
+    def found(self) -> bool:
+        return self.status == "ok" and self.path is not None
+
+    @property
+    def path_cost(self) -> float:
+        if self.path:
+            return compute_path_cost(self.path)
+        return 0.0
+
+    @property
+    def nodes_explored(self) -> int:
+        return self.expanded
+
+    @property
+    def error_message(self) -> str:
+        if self.status == "no_path":
+            return "No path found or impassable node"
+        elif self.status == "node_limit":
+            return "Node expansion limit reached"
+        elif self.status == "timeout":
+            return "Search timed out"
+        return self.status
+
 
 def compute_path_cost(path: List[Coordinate]) -> float:
     """
