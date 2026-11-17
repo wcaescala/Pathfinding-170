@@ -1,0 +1,30 @@
+{
+  "run_id": "2026-11-17_fast",
+  "seed": 42,
+  "k": 2,
+  "maps": [
+    "ht_store.map",
+    "lt_foundry_n.map",
+    "ht_playershouse_n.map",
+    "ca_cave.map",
+    "ht_keep.map",
+    "w_encounter1.map",
+    "lt_0_lowtown.map",
+    "w_woundedcoast.map",
+    "dr_0_deeproads.map"
+  ],
+  "algorithms": [
+    "bfs",
+    "dfs",
+    "dijkstra",
+    "gbfs",
+    "astar",
+    "jps"
+  ],
+  "repeats": 3,
+  "timeout_s": 5.0,
+  "max_nodes": 100000,
+  "python": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "platform": "win32",
+  "git_commit": "7d9600f5b9147119e92b0863debde41d85bd8caa"
+}

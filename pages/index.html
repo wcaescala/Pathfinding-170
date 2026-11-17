@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathfinding Algorithm Evaluation – Dragon Age 2 Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Pathfinding algorithm evaluation</p>
+    <h1>Six ways to cross a Dragon Age 2 map</h1>
+    <p class="lede">BFS, DFS, Dijkstra, Greedy Best-First, A* and Jump Point Search, all written from scratch and tested on the Moving AI DA2 grid benchmark.</p>
+    <div class="hero-stats">
+      <div><b>0.44 ms</b>fastest median time (GBFS)</div>
+      <div><b>6.5</b>median nodes expanded by JPS</div>
+      <div><b>100%</b>success rate, all algorithms</div>
+    </div>
+    <nav aria-label="Sections">
+      <a href="#m1">Milestone 1 · Proposal</a>
+      <a href="#m2">Milestone 2 · BFS &amp; DFS</a>
+      <a href="#m3">Milestone 3 · All methods</a>
+      <a href="#refs">References</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="m1">
+  <h2>Milestone 1: Proposal</h2>
+  <h3>Dataset</h3>
+  <p>The <a href="https://www.movingai.com/benchmarks/da2/index.html">Moving AI Dragon Age 2 (DA2) Pathfinding Benchmark</a> provides grid-based maps and pathfinding scenarios taken from a video game. The maps differ in size and obstacle layout, and each scenario gives a fixed start and goal, so every algorithm is compared under the same conditions.</p>
+
+  <h3>Algorithms compared</h3>
+  <div class="algos">
+    <details open><summary><i class="dot" style="--c:var(--dijkstra)"></i>Dijkstra's algorithm</summary>
+      <p>The baseline. It finds the shortest path by tracking accumulated cost from the start, handles varying movement costs, and needs no heuristic. Comparing it with heuristic methods shows whether goal-directed search improves efficiency.</p></details>
+    <details><summary><i class="dot" style="--c:var(--bfs)"></i>Breadth-First Search (BFS)</summary>
+      <p>Explores neighbours level by level, which gives the shortest path when every move costs the same. It is the uninformed-search baseline. Because the benchmark charges more for diagonal moves, standard BFS may not find the optimal path under its rules.</p></details>
+    <details><summary><i class="dot" style="--c:var(--dfs)"></i>Depth-First Search (DFS)</summary>
+      <p>Follows one path as deep as possible before backtracking. It shows how depth-oriented exploration affects time, search effort and path quality, and it does not guarantee the shortest path.</p></details>
+    <details><summary><i class="dot" style="--c:var(--gbfs)"></i>Greedy Best-First Search (GBFS)</summary>
+      <p>Uses a heuristic to expand the node that looks closest to the goal. It tests whether steering toward the destination cuts time and nodes explored. Since it ignores the cost already paid, it does not guarantee the shortest path.</p></details>
+    <details><summary><i class="dot" style="--c:var(--astar)"></i>A* Search</summary>
+      <p>Combines the actual cost so far with a heuristic estimate of the remaining distance. With an admissible heuristic and a correct implementation it finds an optimal path, often exploring far fewer nodes than Dijkstra. The benchmark's reference optimal costs make it easy to judge path quality.</p></details>
+    <details><summary><i class="dot" style="--c:var(--jps)"></i>Jump Point Search (JPS)</summary>
+      <p>An A* optimisation for uniform-cost grids. It skips intermediate nodes and expands only "jump points" (turning points). It is included to see whether fewer expansions mean lower time while keeping optimal paths.</p></details>
+  </div>
+
+  <h3>Metrics</h3>
+  <dl class="metrics">
+    <div><dt>Execution time (ms)</dt><dd>How long each algorithm takes to find a path from start to goal. Shows which solve scenarios fastest and what optimisations like JPS gain.</dd></div>
+    <div><dt>Path length (distance)</dt><dd>Total movement cost of the path found, following the benchmark's rules including diagonal cost. Shows whether a route is optimal.</dd></div>
+    <div><dt>Nodes explored</dt><dd>Nodes expanded during search. Indicates how much work an algorithm does and explains time differences, especially A* vs JPS.</dd></div>
+    <div><dt>Success rate (%)</dt><dd>Share of scenarios where a valid path is found. Measures reliability across maps and obstacle layouts.</dd></div>
+  </dl>
+</section>
+
+<section id="m2">
+  <h2>Milestone 2: BFS and DFS baseline</h2>
+  <p>This milestone built a custom data loader (<code>map_loader.py</code> reads <code>.map</code> files, <code>scenario_loader.py</code> reads <code>.scen</code> files, with no high-level data libraries), an evaluation plan, and working BFS and DFS implementations with no high-level imports.</p>
+  <ul class="facts">
+    <li><b>16</b> scenarios</li><li>Seed <b>42</b></li><li><b>2</b> samples per tier</li><li>Limits: <b>100,000</b> nodes, <b>5 s</b></li>
+  </ul>
+
+  <h3>Overall performance</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Algorithm</th><th>Success</th><th>Mean time</th><th>Median time</th><th>Mean nodes</th><th>Median nodes</th><th>Mean subopt.</th><th>Max subopt.</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">BFS</th><td>100%</td><td>15.20 ms</td><td>5.08 ms</td><td>1456.6</td><td>617.0</td><td>×1.003</td><td>×1.051</td></tr>
+      <tr><th scope="row">DFS</th><td>100%</td><td>12.18 ms</td><td>10.47 ms</td><td>1117.1</td><td>764.0</td><td>×11.102</td><td>×40.929</td></tr>
+    </tbody></table></div>
+
+  <h3>By distance tier</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Tier</th><th>Algorithm</th><th>Success</th><th>Mean time</th><th>Mean nodes</th><th>Mean subopt.</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" rowspan="2">Short</th><td>BFS</td><td>100%</td><td>1.47 ms</td><td>164.0</td><td>×1.000</td></tr><tr><td>DFS</td><td>100%</td><td>4.22 ms</td><td>392.0</td><td>×15.255</td></tr>
+      <tr><th scope="row" rowspan="2">Medium</th><td>BFS</td><td>100%</td><td>8.72 ms</td><td>912.7</td><td>×1.000</td></tr><tr><td>DFS</td><td>100%</td><td>13.17 ms</td><td>1242.3</td><td>×12.312</td></tr>
+      <tr><th scope="row" rowspan="2">Long</th><td>BFS</td><td>100%</td><td>45.50 ms</td><td>4211.2</td><td>×1.013</td></tr><tr><td>DFS</td><td>100%</td><td>22.63 ms</td><td>2016.8</td><td>×3.058</td></tr>
+    </tbody></table></div>
+
+  <h3>Observations</h3>
+  <ul>
+    <li>Both algorithms found a path in every one of the 16 scenarios.</li>
+    <li>Execution time and explored-node counts varied from scenario to scenario.</li>
+    <li>The summary gives a basis for comparing BFS and DFS, but more testing is needed to see how consistent the differences are across map sizes and difficulty tiers.</li>
+    <li>The loaders, both algorithms and the evaluation system all work, and the tests processed 16 scenarios into comparative tables. The evaluation plan is in the repository's <code>docs</code> folder.</li>
+  </ul>
+</section>
+
+<section id="m3">
+  <h2>Milestone 3: Comparison of all six methods</h2>
+  <p>This stage implements every algorithm from scratch along with our own evaluation metrics. Scenarios are stratified from the DA2 benchmark: <b>nine maps</b>, <b>five environments</b>, <b>three size tiers</b>, and short, medium and long query tiers. Each algorithm is scored on execution time, nodes expanded, path suboptimality (α) and success rate under a 5 s / 100,000-node limit. The body of the report says the runs cover about 52 scenarios; its closing note says 54 scenarios with k = 2 (full results are in the repository's <code>/results</code> folder).</p>
+
+  <h3>Results</h3>
+  <div class="table-scroll"><table id="results">
+    <thead><tr><th>Algorithm</th><th>Median time (ms)</th><th>Median expanded</th><th>Mean α</th></tr></thead>
+    <tbody></tbody></table></div>
+
+  <figure>
+    <div class="chart-head">
+      <h3>Compare algorithms</h3>
+      <div class="toggle" role="group" aria-label="Metric">
+        <button class="on" data-m="time" aria-pressed="true">Median time</button>
+        <button data-m="exp" aria-pressed="false">Median nodes expanded</button>
+        <button data-m="alpha" aria-pressed="false">Mean α</button>
+      </div>
+    </div>
+    <div id="bars" class="bars"></div>
+    <figcaption id="bars-cap"></figcaption>
+  </figure>
+
+  <figure>
+    <h3>Figure 1. Median execution time by distance tier</h3>
+    <div class="legend"><span><i style="--c:#9fb3c4"></i>Short</span><span><i style="--c:#5f7f99"></i>Medium</span><span><i style="--c:#1f3a52"></i>Long</span></div>
+    <div id="tiers" class="bars"></div>
+    <figcaption>Log scale. Values are approximate, read from the report's bar chart. Time grows with distance for every algorithm, and GBFS stays lowest in every tier.</figcaption>
+  </figure>
+
+  <h3>Findings</h3>
+  <div class="findings">
+    <article><h4>Success and optimality</h4><p>All algorithms achieved 100% success. A*, Dijkstra and JPS found optimal paths. GBFS paid a modest ~8% optimality penalty for speed, while DFS was heavily suboptimal (median α ≈ 3.7, with outliers up to 49×).</p></article>
+    <article><h4>Search effort</h4><p>Heuristic guidance sharply reduced expansions. A* expanded ~17× fewer nodes than Dijkstra, and JPS ~8× fewer than A*. Unlike the uninformed algorithms, JPS expansions stayed nearly flat as paths grew longer.</p></article>
+    <article><h4>Time vs. effort crossover</h4><p>JPS expanded the fewest nodes, but its line-scanning Python implementation has higher per-expansion overhead. A* is faster on short and medium queries, while JPS is faster on long ones.</p></article>
+    <article><h4>Environment sensitivity</h4><p>DFS struggled in open halls and complex terrain. JPS timing stayed consistent across environments. A* slowed in winding cave corridors, where heuristics help less. Overall, GBFS was fastest in ~70% of scenarios.</p></article>
+  </div>
+  <p class="note">The report also includes Figure 2 (nodes expanded vs. optimal path length, scatter) and Figure 3 (Dolan-Moré performance profile). Those plots rest on per-scenario data that is in the repository's results folder, so they are not redrawn here.</p>
+</section>
+
+<section id="refs">
+  <h2>References</h2>
+  <ol>
+    <li>Moving AI Lab. <a href="https://www.movingai.com/benchmarks/da2/index.html">Pathfinding Benchmarks: Dragon Age 2</a>.</li>
+    <li>Moving AI Lab. <a href="https://www.movingai.com/benchmarks/grids.html">2D Pathfinding Benchmarks</a>.</li>
+    <li>GeeksforGeeks. <a href="https://www.geeksforgeeks.org/dsa/greedy-best-first-search-algorithm/">Greedy Best-First Search Algorithm</a>.</li>
+    <li>Moving AI Lab. <a href="https://www.movingai.com/w3.html">Research and Resources on Pathfinding Algorithms</a>.</li>
+  </ol>
+  <p>Project repository: <a href="https://github.com/wcaescala/Pathfinding-170">github.com/wcaescala/Pathfinding-170</a> · Proposal slides: <a href="https://canva.link/qjbmayikak26mea">Canva</a></p>
+</section>
+</main>
+<footer><div class="wrap">Pathfinding Algorithm Evaluation · Milestone reports 1–3</div></footer>
+<script src="script.js"></script>
+</body>
+</html>
