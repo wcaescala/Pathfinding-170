@@ -3,9 +3,9 @@
 ## Group x
 
 
-AJ Rabaria
+AJ
 
-Wendy Escala
+Wendy 
 
 Bart
 

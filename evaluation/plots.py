@@ -123,7 +123,10 @@ def generate_f2_expanded_boxplot(df: pd.DataFrame, out_dir: Path) -> None:
     data = [df_success[df_success["algorithm"] == algo]["expanded"].values for algo in algos]
     colors = [ALGO_COLORS.get(algo, "gray") for algo in algos]
 
-    bp = ax.boxplot(data, labels=algos, patch_artist=True)
+    try:
+        bp = ax.boxplot(data, tick_labels=algos, patch_artist=True)
+    except TypeError:
+        bp = ax.boxplot(data, labels=algos, patch_artist=True)
 
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
@@ -215,7 +218,10 @@ def generate_f5_alpha_boxplot(df: pd.DataFrame, out_dir: Path) -> None:
     data = [df_success[df_success["algorithm"] == algo]["alpha"].dropna().values for algo in algos]
     colors = [ALGO_COLORS.get(algo, "gray") for algo in algos]
 
-    bp = ax.boxplot(data, labels=algos, patch_artist=True)
+    try:
+        bp = ax.boxplot(data, tick_labels=algos, patch_artist=True)
+    except TypeError:
+        bp = ax.boxplot(data, labels=algos, patch_artist=True)
 
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
