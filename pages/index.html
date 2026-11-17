@@ -131,15 +131,15 @@
         <details open>
           <summary><i class="dot" style="--c:var(--dijkstra)"></i>Dijkstra's Algorithm</summary>
           <p>The optimal uninformed baseline. It explores outward uniformly by tracking accumulated cost from the start
-            node, correctly handling varying edge costs (such as $\sqrt{2}$ diagonal movement) without heuristic
+            node, correctly handling varying edge costs (such as √2 diagonal movement) without heuristic
             direction. Comparing it with heuristic-guided methods quantifies the precise search reduction gained by goal
             guidance.</p>
         </details>
         <details>
           <summary><i class="dot" style="--c:var(--bfs)"></i>Breadth-First Search (BFS)</summary>
           <p>Explores neighbors level-by-level using a FIFO queue, guaranteeing shortest hop-count paths on unweighted
-            graphs. Because the benchmark charges $\sqrt{2} \approx 1.414$ for diagonal steps versus $1.0$ for cardinal
-            steps, standard BFS finds paths with near-optimal length ($\alpha \approx 1.003$) but does not strictly
+            graphs. Because the benchmark charges √2 ≈ 1.414 for diagonal steps versus 1.0 for cardinal
+            steps, standard BFS finds paths with near-optimal length (α ≈ 1.003) but does not strictly
             guarantee diagonal metric optimality.</p>
         </details>
         <details>
@@ -150,21 +150,21 @@
         </details>
         <details>
           <summary><i class="dot" style="--c:var(--gbfs)"></i>Greedy Best-First Search (GBFS)</summary>
-          <p>Evaluates frontier nodes solely by their octile heuristic distance to the goal $h(n)$, aggressively driving
+          <p>Evaluates frontier nodes solely by their octile heuristic distance to the goal h(n), aggressively driving
             towards the destination. It tests how much search time and node expansions can be saved when past path cost
             $g(n)$ is ignored, in exchange for a modest path optimality penalty.</p>
         </details>
         <details>
           <summary><i class="dot" style="--c:var(--astar)"></i>A* Search</summary>
-          <p>Combines exact cost-to-come $g(n)$ with an admissible octile distance heuristic $h(n)$ to minimize $f(n) =
-            g(n) + h(n)$. With an admissible and consistent heuristic, A* guarantees optimal paths ($\alpha = 1.000$)
-            while pruning the search space by up to $17\times$ compared to Dijkstra.</p>
+          <p>Combines exact cost-to-come g(n) with an admissible octile distance heuristic h(n) to minimize f(n) =
+            g(n) + h(n). With an admissible and consistent heuristic, A* guarantees optimal paths (α = 1.000)
+            while pruning the search space by up to 17× compared to Dijkstra.</p>
         </details>
         <details>
           <summary><i class="dot" style="--c:var(--jps)"></i>Jump Point Search (JPS)</summary>
           <p>An algorithmic acceleration of A* designed for uniform-cost grid maps. JPS prunes intermediate nodes along
             straight and diagonal rays, expanding only "jump points" where obstacles force turning maneuvers. It
-            preserves exact path optimality ($\alpha = 1.000$) while reducing expanded nodes by another $8\times$ over
+            preserves exact path optimality (α = 1.000) while reducing expanded nodes by another 8× over
             A*.</p>
         </details>
       </div>
@@ -178,8 +178,7 @@
         </div>
         <div>
           <dt>Path Length &amp; Suboptimality (&alpha;)</dt>
-          <dd>The true cost of the reconstructed trajectory divided by the reference optimal cost: $\alpha = \text{cost}
-            / \text{cost}^*$, where $\alpha = 1.000$ represents a proven optimal path.</dd>
+          <dd>The true cost of the reconstructed trajectory divided by the reference optimal cost: α = cost / cost*, where α = 1.000 represents a proven optimal path.</dd>
         </div>
         <div>
           <dt>Nodes Explored / Expanded</dt>
@@ -316,10 +315,10 @@
       <h3>Milestone 2 Observations</h3>
       <ul>
         <li>Both uninformed algorithms achieved 100% success across all 16 sampled queries.</li>
-        <li>While BFS yielded near-optimal paths ($\alpha \le 1.051$), its node expansion volume scaled quadratically
+        <li>While BFS yielded near-optimal paths (α ≤ 1.051), its node expansion volume scaled quadratically
           with distance due to unguided circular frontier growth.</li>
         <li>DFS exhibited extreme trajectory variance: in open queries it darted toward the target quickly, but
-          frequently produced paths up to $40.9\times$ longer than the geodesic shortest route.</li>
+          frequently produced paths up to 40.9× longer than the geodesic shortest route.</li>
       </ul>
     </section>
 
@@ -380,15 +379,14 @@
       <div class="findings">
         <article>
           <h4>1. Optimality &amp; Path Quality</h4>
-          <p><b>A*</b>, <b>Dijkstra</b>, and <b>JPS</b> consistently achieve guaranteed optimal trajectories ($\alpha =
-            1.000$). <b>GBFS</b> pays a negligible $\sim 8\%$ optimality penalty ($\alpha = 1.078$) in exchange for
-            massive speed gains, whereas <b>DFS</b> produces severely suboptimal paths (mean $\alpha = 7.659$, with
-            outliers exceeding $40\times$).</p>
+          <p><b>A*</b>, <b>Dijkstra</b>, and <b>JPS</b> consistently achieve guaranteed optimal trajectories (α = 1.000). <b>GBFS</b> pays a negligible ~8% optimality penalty (α = 1.078) in exchange for
+            massive speed gains, whereas <b>DFS</b> produces severely suboptimal paths (mean α = 7.659, with
+            outliers exceeding 40×).</p>
         </article>
         <article>
           <h4>2. Drastic Search Effort Reduction</h4>
-          <p>Heuristic guidance dramatically curbs unnecessary exploration. <b>A*</b> expands $\sim 17\times$ fewer
-            nodes than Dijkstra, while <b>JPS</b> expands another $8\times$ fewer nodes than A* (median 6.5 expansions).
+          <p>Heuristic guidance dramatically curbs unnecessary exploration. <b>A*</b> expands ~17× fewer
+            nodes than Dijkstra, while <b>JPS</b> expands another 8x fewer nodes than A* (median 6.5 expansions).
             JPS expansions remain nearly constant even as map path lengths grow.</p>
         </article>
         <article>
@@ -458,8 +456,8 @@
           <img src="figures/f5_alpha_boxplot.png" alt="Figure 5: Path Suboptimality Distribution">
           <div class="gallery-card-body">
             <h4>Figure 5: Path Suboptimality Distribution (&alpha;)</h4>
-            <p>Boxplot comparing path cost relative to optimal ($\alpha$). A*, Dijkstra, and JPS guarantee $\alpha =
-              1.000$, GBFS is near-optimal, while DFS displays high variance.</p>
+            <p>Boxplot comparing path cost relative to optimal α. A*, Dijkstra, and JPS guarantee α =
+              1.000, GBFS is near-optimal, while DFS displays high variance.</p>
           </div>
         </div>
 
@@ -478,7 +476,7 @@
           <img src="figures/f7_performance_profile.png" alt="Figure 7: Dolan-Moré Performance Profile">
           <div class="gallery-card-body">
             <h4>Figure 7: Dolan-Moré Performance Profile</h4>
-            <p>Cumulative probability $P(r_p \le \tau)$ of an algorithm solving a problem within factor $\tau$ of the
+            <p>Cumulative probability P(r<sub>p</sub> ≤ τ) of an algorithm solving a problem within factor τ of the
               fastest solver. Highlights GBFS and A* dominance.</p>
           </div>
         </div>
