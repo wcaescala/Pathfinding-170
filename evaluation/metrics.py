@@ -9,6 +9,8 @@ import math
 
 from algorithms.base import SearchResult, validate_path
 
+SQRT2 = math.sqrt(2)
+
 
 @dataclass
 class ScenarioEvaluationRecord:
@@ -166,3 +168,47 @@ def aggregate_records(records: List[ScenarioEvaluationRecord]) -> AggregatedMetr
         suboptimality_median=s_median,
         suboptimality_max=s_max
     )
+
+
+def verify_path(grid: Any, path: List[Tuple[int, int]], start: Tuple[int, int], goal: Tuple[int, int]) -> Tuple[bool, Optional[float]]:
+    """
+    Return (is_valid, octile_cost). Cost is None when invalid.
+
+    Verifies that a path is continuous, collision-free, respects bounds,
+    does not cut corners diagonally, and connects start to goal.
+
+    Works with GridMap objects (from utils.map_loader) which provide
+    in_bounds(x, y) and is_passable(x, y) methods.
+    """
+    if not path or path[0] != start or path[-1] != goal:
+        return False, None
+
+    # Check all cells in the path are passable
+    for x, y in path:
+        if not grid.in_bounds(x, y) or not grid.is_passable(x, y):
+            return False, None
+
+    cost = 0.0
+
+    for (x0, y0), (x1, y1) in zip(path, path[1:]):
+        dx, dy = x1 - x0, y1 - y0
+
+        # Check for illegal step (teleport or no movement)
+        if abs(dx) > 1 or abs(dy) > 1 or (dx == 0 and dy == 0):
+            return False, None
+
+        # Corner cutting check for diagonal moves
+        if dx != 0 and dy != 0:
+            if not (grid.is_passable(x0 + dx, y0) and grid.is_passable(x0, y0 + dy)):
+                return False, None
+            cost += SQRT2
+        else:
+            cost += 1.0
+
+    return True, cost
+
+
+def size_tier(grid: Any) -> str:
+    """Classify map into Small, Medium, or Large tier based on cell count."""
+    cells = grid.width * grid.height
+    return "small" if cells < 30_000 else "medium" if cells <= 200_000 else "large"
