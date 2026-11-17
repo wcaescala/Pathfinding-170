@@ -1,12 +1,16 @@
-.PHONY: fast full test clean help
+.PHONY: fast full test clean help gui
 
 # Default target
 help:
 	@echo "Available targets:"
+	@echo "  make gui       - Launch native desktop pathfinding visualizer GUI (Tkinter)"
 	@echo "  make fast      - Run fast benchmark (k=2, 54 scenarios) and generate report"
 	@echo "  make full      - Run full benchmark (k=5, 135 scenarios) with single worker"
 	@echo "  make test      - Run all tests"
 	@echo "  make clean     - Clean results directories"
+
+gui:
+	python3 gui.py
 
 fast:
 	python3 -m evaluation.runner --preset fast

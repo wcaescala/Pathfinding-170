@@ -4,14 +4,17 @@ Unit and integration tests for Depth-First Search (DFS).
 
 import unittest
 from pathlib import Path
+import sys
 import numpy as np
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from utils.map_loader import GridMap, load_map
 from utils.scenario_loader import load_scenarios
 from algorithms.base import validate_path, compute_path_cost, SQRT2
 from algorithms.dfs import dfs
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 class MockGrid:
@@ -53,7 +56,7 @@ class TestDFS(unittest.TestCase):
         grid = MockGrid(5, 5, walls)
         result = dfs(grid, (0, 0), (4, 4))
         self.assertFalse(result.found)
-        self.assertEqual(len(result.path), 0)
+        self.assertEqual(len(result.path or []), 0)
 
     def test_corner_cutting_prevention(self):
         walls = {(1, 0), (0, 1)}
