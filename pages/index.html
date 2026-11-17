@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Six Ways to Cross a Dragon Age 2 Map · Pathfinding Algorithm Evaluation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ==================== ACADEMIC HERO HEADER ==================== -->
+  <header class="hero">
+    <div class="wrap">
+      <h1>Six Ways to Cross a Dragon Age 2 Map</h1>
+      <p class="subtitle">Empirical Pathfinding Analysis &amp; Trajectory Benchmarking Across 67 Video Game Maps</p>
+
+      <div class="authors-row">
+        <span class="author">AJ,</span>
+        <span class="author">Wendy,</span>
+        <span class="author">Bart,</span>
+        <span class="author">Ters</span>
+      </div>
+
+      <div class="affiliations">CMCS 170 · Final Project Group X</div>
+      <div class="conference-tag">Moving AI Dragon Age 2 Benchmark Evaluation</div>
+
+      <!-- Academic Pill Action Buttons -->
+      <div class="pill-buttons">
+        <a class="pill-btn" href="#m1">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+          </svg>
+          Proposal
+        </a>
+        <a class="pill-btn" href="https://github.com/wcaescala/Pathfinding-170" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          Code
+        </a>
+        <a class="pill-btn" href="#gui-section">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
+          </svg>
+          Interactive Map GUI
+        </a>
+        <a class="pill-btn" href="#m3">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+          </svg>
+          Benchmark Data
+        </a>
+        <a class="pill-btn" href="#figures">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" />
+          </svg>
+          Figure Gallery
+        </a>
+        <a class="pill-btn" href="https://canva.link/qjbmayikak26mea" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+          </svg>
+          Slides
+        </a>
+      </div>
+
+      <!-- Centered Hero Teaser Image -->
+      <div class="hero-teaser">
+        <div class="teaser-badge">🗺️ PATHFINDING ON DRAGON AGE 2 MAPS</div>
+        <img src="assets/hero_banner.png"
+          alt="Pathfinding Trajectories on Dragon Age 2 Map (ht_playershouse_n) comparing BFS, DFS, Dijkstra, GBFS, A*, and JPS">
+      </div>
+      <p class="teaser-caption">
+        <b>Trajectory Comparison Across Video Game Maps:</b> Multi-path search trajectories traced on Dragon Age 2's
+        <code>ht_playershouse_n.map</code>. Each algorithm is marked with ribbon offsets: optimal routes (<b>A*</b>,
+        <b>Dijkstra</b>, <b>JPS</b>) track the diagonal-aware geodesic; greedy search (<b>GBFS</b>) achieves the fastest
+        execution time with a minor suboptimality penalty; while unguided depth exploration (<b>DFS</b>) wanders across
+        obstacles before terminating.
+      </p>
+
+      <!-- Key Performance Stats Ribbon -->
+      <div class="hero-stats">
+        <div class="stat-card">
+          <b>0.44 ms</b>
+          <span>Fastest Median Time (GBFS)</span>
+        </div>
+        <div class="stat-card">
+          <b>6.5</b>
+          <span>Median Nodes Expanded (JPS)</span>
+        </div>
+        <div class="stat-card">
+          <b>100%</b>
+          <span>Success Rate Across All Algorithms</span>
+        </div>
+        <div class="stat-card">
+          <b>67</b>
+          <span>Dragon Age 2 Maps Benchmarked</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ==================== MILESTONE 1 ==================== -->
+    <section id="m1">
+      <h2>Milestone 1: Proposal &amp; Algorithmic Foundations</h2>
+
+      <h3>The Dragon Age 2 Pathfinding Benchmark Dataset</h3>
+      <p>The <a href="https://www.movingai.com/benchmarks/da2/index.html" target="_blank" rel="noopener">Moving AI
+          Dragon Age 2 (DA2) Pathfinding Benchmark</a> provides grid-based maps and pathfinding scenarios sampled from
+        real video game environments. The maps vary significantly in geometry, obstacle density, and navigation
+        complexity — from open city plazas to winding cave labyrinths. Each scenario defines a fixed start coordinate,
+        goal coordinate, and precomputed reference optimal path length, ensuring all six algorithms are evaluated under
+        identical conditions.</p>
+
+      <h3>Algorithms Compared</h3>
+      <div class="algos">
+        <details open>
+          <summary><i class="dot" style="--c:var(--dijkstra)"></i>Dijkstra's Algorithm</summary>
+          <p>The optimal uninformed baseline. It explores outward uniformly by tracking accumulated cost from the start
+            node, correctly handling varying edge costs (such as √2 diagonal movement) without heuristic
+            direction. Comparing it with heuristic-guided methods quantifies the precise search reduction gained by goal
+            guidance.</p>
+        </details>
+        <details>
+          <summary><i class="dot" style="--c:var(--bfs)"></i>Breadth-First Search (BFS)</summary>
+          <p>Explores neighbors level-by-level using a FIFO queue, guaranteeing shortest hop-count paths on unweighted
+            graphs. Because the benchmark charges √2 ≈ 1.414 for diagonal steps versus 1.0 for cardinal
+            steps, standard BFS finds paths with near-optimal length (α ≈ 1.003) but does not strictly
+            guarantee diagonal metric optimality.</p>
+        </details>
+        <details>
+          <summary><i class="dot" style="--c:var(--dfs)"></i>Depth-First Search (DFS)</summary>
+          <p>Follows a single search branch as deep as possible before backtracking via a LIFO stack. It provides a
+            baseline for unguided exploration without cost tracking, demonstrating how depth-first traversal impacts
+            execution time, search volume, and severe path suboptimality.</p>
+        </details>
+        <details>
+          <summary><i class="dot" style="--c:var(--gbfs)"></i>Greedy Best-First Search (GBFS)</summary>
+          <p>Evaluates frontier nodes solely by their octile heuristic distance to the goal h(n), aggressively driving
+            towards the destination. It tests how much search time and node expansions can be saved when past path cost
+            $g(n)$ is ignored, in exchange for a modest path optimality penalty.</p>
+        </details>
+        <details>
+          <summary><i class="dot" style="--c:var(--astar)"></i>A* Search</summary>
+          <p>Combines exact cost-to-come g(n) with an admissible octile distance heuristic h(n) to minimize f(n) =
+            g(n) + h(n). With an admissible and consistent heuristic, A* guarantees optimal paths (α = 1.000)
+            while pruning the search space by up to 17× compared to Dijkstra.</p>
+        </details>
+        <details>
+          <summary><i class="dot" style="--c:var(--jps)"></i>Jump Point Search (JPS)</summary>
+          <p>An algorithmic acceleration of A* designed for uniform-cost grid maps. JPS prunes intermediate nodes along
+            straight and diagonal rays, expanding only "jump points" where obstacles force turning maneuvers. It
+            preserves exact path optimality (α = 1.000) while reducing expanded nodes by another 8× over
+            A*.</p>
+        </details>
+      </div>
+
+      <h3>Evaluation Metrics</h3>
+      <dl class="metrics">
+        <div>
+          <dt>Execution Time (ms)</dt>
+          <dd>CPU runtime required to compute a complete path from start to goal coordinates under identical hardware
+            conditions.</dd>
+        </div>
+        <div>
+          <dt>Path Length &amp; Suboptimality (&alpha;)</dt>
+          <dd>The true cost of the reconstructed trajectory divided by the reference optimal cost: α = cost / cost*, where α = 1.000 represents a proven optimal path.</dd>
+        </div>
+        <div>
+          <dt>Nodes Explored / Expanded</dt>
+          <dd>Total states removed from the priority queue or frontier and evaluated. Reflects raw computational work
+            independent of language runtime overhead.</dd>
+        </div>
+        <div>
+          <dt>Success Rate (%)</dt>
+          <dd>Percentage of benchmark queries solved within strict safety bounds (100,000 node expansion ceiling and 5.0
+            s timeout).</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ==================== MILESTONE 2 ==================== -->
+    <section id="m2">
+      <h2>Milestone 2: BFS and DFS Baseline Evaluation</h2>
+      <p>Milestone 2 established our custom parser and benchmark harness: <code>map_loader.py</code> (reading
+        <code>.map</code> geometry files) and <code>scenario_loader.py</code> (reading <code>.scen</code> coordinate
+        queries), built entirely from scratch with zero high-level data libraries. The test suite validated BFS and DFS
+        on stratified difficulty tiers under a 100,000-node ceiling.
+      </p>
+
+      <ul class="facts">
+        <li><b>16</b> Scenarios Sampled</li>
+        <li><b>Seed 42</b> Reproducibility</li>
+        <li><b>2</b> Samples per Distance Tier</li>
+        <li>Limits: <b>100,000</b> Nodes &middot; <b>5.0 s</b> Timeout</li>
+      </ul>
+
+      <h3>Overall Baseline Performance</h3>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Algorithm</th>
+              <th>Success</th>
+              <th>Mean Time</th>
+              <th>Median Time</th>
+              <th>Mean Nodes</th>
+              <th>Median Nodes</th>
+              <th>Mean Subopt. (&alpha;)</th>
+              <th>Max Subopt.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><i class="dot" style="--c:var(--bfs)"></i>BFS</th>
+              <td>100%</td>
+              <td>15.20 ms</td>
+              <td>5.08 ms</td>
+              <td>1,456.6</td>
+              <td>617.0</td>
+              <td>&times;1.003</td>
+              <td>&times;1.051</td>
+            </tr>
+            <tr>
+              <th scope="row"><i class="dot" style="--c:var(--dfs)"></i>DFS</th>
+              <td>100%</td>
+              <td>12.18 ms</td>
+              <td>10.47 ms</td>
+              <td>1,117.1</td>
+              <td>764.0</td>
+              <td>&times;11.102</td>
+              <td>&times;40.929</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Performance by Distance Tier</h3>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Distance Tier</th>
+              <th>Algorithm</th>
+              <th>Success</th>
+              <th>Mean Time</th>
+              <th>Mean Nodes</th>
+              <th>Mean Subopt. (&alpha;)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" rowspan="2">Short</th>
+              <td>BFS</td>
+              <td>100%</td>
+              <td>1.47 ms</td>
+              <td>164.0</td>
+              <td>&times;1.000</td>
+            </tr>
+            <tr>
+              <td>DFS</td>
+              <td>100%</td>
+              <td>4.22 ms</td>
+              <td>392.0</td>
+              <td>&times;15.255</td>
+            </tr>
+            <tr>
+              <th scope="row" rowspan="2">Medium</th>
+              <td>BFS</td>
+              <td>100%</td>
+              <td>8.72 ms</td>
+              <td>912.7</td>
+              <td>&times;1.000</td>
+            </tr>
+            <tr>
+              <td>DFS</td>
+              <td>100%</td>
+              <td>13.17 ms</td>
+              <td>1,242.3</td>
+              <td>&times;12.312</td>
+            </tr>
+            <tr>
+              <th scope="row" rowspan="2">Long</th>
+              <td>BFS</td>
+              <td>100%</td>
+              <td>45.50 ms</td>
+              <td>4,211.2</td>
+              <td>&times;1.013</td>
+            </tr>
+            <tr>
+              <td>DFS</td>
+              <td>100%</td>
+              <td>22.63 ms</td>
+              <td>2,016.8</td>
+              <td>&times;3.058</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Milestone 2 Observations</h3>
+      <ul>
+        <li>Both uninformed algorithms achieved 100% success across all 16 sampled queries.</li>
+        <li>While BFS yielded near-optimal paths (α ≤ 1.051), its node expansion volume scaled quadratically
+          with distance due to unguided circular frontier growth.</li>
+        <li>DFS exhibited extreme trajectory variance: in open queries it darted toward the target quickly, but
+          frequently produced paths up to 40.9× longer than the geodesic shortest route.</li>
+      </ul>
+    </section>
+
+    <!-- ==================== MILESTONE 3 ==================== -->
+    <section id="m3">
+      <h2>Milestone 3: Comprehensive Evaluation of All Six Algorithms</h2>
+      <p>Milestone 3 expanded the evaluation across all six methods: <b>Dijkstra</b>, <b>BFS</b>, <b>DFS</b>,
+        <b>GBFS</b>, <b>A*</b>, and <b>Jump Point Search (JPS)</b>. The benchmark encompasses representative
+        environments spanning open plazas, dungeons, residences, and winding cave labyrinths across short, medium, and
+        long query categories.
+      </p>
+
+      <h3>Benchmark Summary Table</h3>
+      <div class="table-scroll">
+        <table id="results">
+          <thead>
+            <tr>
+              <th>Algorithm</th>
+              <th>Median Time (ms)</th>
+              <th>Median Nodes Expanded</th>
+              <th>Mean Suboptimality (&alpha;)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Interactive Bar Comparison with Toggles -->
+      <figure>
+        <div class="chart-head">
+          <h3>Interactive Metric Comparison</h3>
+          <div class="toggle" role="group" aria-label="Metric Toggle">
+            <button class="on" data-m="time" aria-pressed="true">Median Time</button>
+            <button data-m="exp" aria-pressed="false">Median Nodes Expanded</button>
+            <button data-m="alpha" aria-pressed="false">Mean Suboptimality (&alpha;)</button>
+          </div>
+        </div>
+        <div id="bars" class="bars"></div>
+        <figcaption id="bars-cap"></figcaption>
+      </figure>
+
+      <!-- Distance Tier Progression Bar Chart -->
+      <figure>
+        <div class="chart-head">
+          <h3>Execution Time Across Distance Tiers (Log Scale)</h3>
+          <div class="legend">
+            <span><i style="--c:#9fb3c4"></i>Short</span>
+            <span><i style="--c:#5f7f99"></i>Medium</span>
+            <span><i style="--c:#1f3a52"></i>Long</span>
+          </div>
+        </div>
+        <div id="tiers" class="bars"></div>
+        <figcaption>Log scale comparison. While uninformed algorithms experience exponential runtime explosions on long
+          paths, GBFS and A* scale gracefully, and JPS exhibits nearly flat expansion growth.</figcaption>
+      </figure>
+
+      <h3>Key Empirical Findings</h3>
+      <div class="findings">
+        <article>
+          <h4>1. Optimality &amp; Path Quality</h4>
+          <p><b>A*</b>, <b>Dijkstra</b>, and <b>JPS</b> consistently achieve guaranteed optimal trajectories (α = 1.000). <b>GBFS</b> pays a negligible ~8% optimality penalty (α = 1.078) in exchange for
+            massive speed gains, whereas <b>DFS</b> produces severely suboptimal paths (mean α = 7.659, with
+            outliers exceeding 40×).</p>
+        </article>
+        <article>
+          <h4>2. Drastic Search Effort Reduction</h4>
+          <p>Heuristic guidance dramatically curbs unnecessary exploration. <b>A*</b> expands ~17× fewer
+            nodes than Dijkstra, while <b>JPS</b> expands another 8x fewer nodes than A* (median 6.5 expansions).
+            JPS expansions remain nearly constant even as map path lengths grow.</p>
+        </article>
+        <article>
+          <h4>3. Time vs. Expansion Crossover</h4>
+          <p>Although JPS evaluates the absolute fewest nodes, its ray-scanning jump-point loop in pure Python incurs
+            higher per-node instruction overhead. Consequently, A* remains fastest on short/medium queries, while JPS
+            overtakes A* on long, open trajectories.</p>
+        </article>
+        <article>
+          <h4>4. Environment Sensitivity</h4>
+          <p>DFS degraded substantially in expansive outdoor areas. A* required additional expansions in serpentine cave
+            corridors where euclidean distance underestimates topological distance. Across the entire benchmark, <b>GBFS
+              was the fastest solver in ~70% of scenarios</b>.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================== FIGURE GALLERY ==================== -->
+    <section id="figures">
+      <h2>Publication Benchmark Figures &amp; Empirical Analysis</h2>
+      <p>The following figures report empirical measurements gathered across the Dragon Age 2 benchmark suite,
+        visualizing time scaling, node distribution, Pareto optimality frontiers, and performance profiles.</p>
+
+      <div class="figure-gallery">
+        <!-- Figure 1 -->
+        <div class="gallery-card">
+          <img src="figures/f1_time_by_distance.png" alt="Figure 1: Execution Time by Distance Tier">
+          <div class="gallery-card-body">
+            <h4>Figure 1: Execution Time by Distance Tier</h4>
+            <p>Log-scale execution time across short, medium, and long query categories. Demonstrates runtime divergence
+              between uninformed and heuristic-guided algorithms.</p>
+          </div>
+        </div>
+
+        <!-- Figure 2 -->
+        <div class="gallery-card">
+          <img src="figures/f2_expanded_boxplot.png" alt="Figure 2: Expanded Nodes Distribution">
+          <div class="gallery-card-body">
+            <h4>Figure 2: Node Expansions Distribution</h4>
+            <p>Boxplots illustrating expanded node volume. JPS and A* demonstrate tight, minimal expansion distributions
+              compared to Dijkstra and BFS.</p>
+          </div>
+        </div>
+
+        <!-- Figure 3 -->
+        <div class="gallery-card">
+          <img src="figures/f3_optimal_vs_expanded.png" alt="Figure 3: Optimal Distance vs Expanded Nodes">
+          <div class="gallery-card-body">
+            <h4>Figure 3: Search Effort vs. Optimal Path Length</h4>
+            <p>Scatter plot illustrating how search effort scales with trajectory length. JPS expansion counts stay
+              remarkably low across all path lengths.</p>
+          </div>
+        </div>
+
+        <!-- Figure 4 -->
+        <div class="gallery-card">
+          <img src="figures/f4_success_heatmap.png" alt="Figure 4: Success Rate Heatmap">
+          <div class="gallery-card-body">
+            <h4>Figure 4: Algorithm Success Rate Across Maps</h4>
+            <p>All algorithms achieved a 100% success rate under the 100,000-node safety threshold across all tested
+              Dragon Age 2 benchmark maps.</p>
+          </div>
+        </div>
+
+        <!-- Figure 5 -->
+        <div class="gallery-card">
+          <img src="figures/f5_alpha_boxplot.png" alt="Figure 5: Path Suboptimality Distribution">
+          <div class="gallery-card-body">
+            <h4>Figure 5: Path Suboptimality Distribution (&alpha;)</h4>
+            <p>Boxplot comparing path cost relative to optimal α. A*, Dijkstra, and JPS guarantee α =
+              1.000, GBFS is near-optimal, while DFS displays high variance.</p>
+          </div>
+        </div>
+
+        <!-- Figure 6 -->
+        <div class="gallery-card">
+          <img src="figures/f6_time_vs_alpha.png" alt="Figure 6: Execution Time vs Suboptimality Pareto">
+          <div class="gallery-card-body">
+            <h4>Figure 6: Pareto Frontier: Time vs. Suboptimality</h4>
+            <p>Execution time vs. path quality tradeoff. A* and JPS define the optimal quality boundary, while GBFS
+              defines the speed-optimized frontier.</p>
+          </div>
+        </div>
+
+        <!-- Figure 7 -->
+        <div class="gallery-card">
+          <img src="figures/f7_performance_profile.png" alt="Figure 7: Dolan-Moré Performance Profile">
+          <div class="gallery-card-body">
+            <h4>Figure 7: Dolan-Moré Performance Profile</h4>
+            <p>Cumulative probability P(r<sub>p</sub> ≤ τ) of an algorithm solving a problem within factor τ of the
+              fastest solver. Highlights GBFS and A* dominance.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== INTERACTIVE MAP GUI SECTION ==================== -->
+    <section id="gui-section">
+      <h2>Interactive Map &amp; Trajectory Visualizer</h2>
+      <p>To inspect algorithm behavior in real time, the project includes a standalone interactive GUI
+        (<code>gui.py</code>) capable of loading any Dragon Age 2 <code>.map</code> file, executing all 6 algorithms
+        simultaneously, and rendering overlaid colored trajectory ribbons.</p>
+
+      <div
+        style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+        <h4 style="margin-bottom: 8px;">Running the Interactive Visualizer Locally</h4>
+        <p style="margin-bottom: 12px;">Launch the GUI via terminal from the repository root:</p>
+        <pre
+          style="background: #0f172a; color: #000000; padding: 14px; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"><code>python3 gui.py</code></pre>
+        <ul style="margin: 12px 0 0 20px; font-size: 0.95rem; color: var(--text-secondary);">
+          <li><b>Map Selection:</b> Choose from 67 real Dragon Age 2 maps (caves, city streets, ruins).</li>
+          <li><b>Coordinate Controls:</b> Type custom (X, Y) coordinates or click directly on the canvas to set Start
+            and Goal pins.</li>
+          <li><b>Multi-Path Ribbon Overlay:</b> Compares paths side-by-side with distinct offsets and algorithm
+            signature colors.</li>
+          <li><b>Live Benchmark Table:</b> Displays runtime (ms), path length, node count, and optimality index for
+            every run.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== REFERENCES & CITATION ==================== -->
+    <section id="refs">
+      <h2>References &amp; Citation</h2>
+      <ol>
+        <li>Sturtevant, N. R. (2012). <i>Benchmarks for Grid-Based Pathfinding</i>. IEEE Transactions on Computational
+          Intelligence and AI in Games, 4(2), 144–148. <a href="https://www.movingai.com/benchmarks/da2/index.html"
+            target="_blank" rel="noopener">Moving AI DA2 Benchmark</a>.</li>
+        <li>Harabor, D., &amp; Grastien, A. (2011). <i>Online Graph Pruning for Pathfinding on Grid Maps</i>. In
+          Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 25, No. 1, pp. 1114–1119).</li>
+        <li>Hart, P. E., Nilsson, N. J., &amp; Raphael, B. (1968). <i>A Formal Basis for the Heuristic Determination of
+            Minimum Cost Paths</i>. IEEE Transactions on Systems Science and Cybernetics, 4(2), 100–107.</li>
+        <li>Dijkstra, E. W. (1959). <i>A Note on Two Problems in Connexion with Graphs</i>. Numerische Mathematik, 1(1),
+          269–271.</li>
+      </ol>
+
+
+
+      <p style="margin-top: 16px;">
+        <b>Source Code:</b> <a href="https://github.com/wcaescala/Pathfinding-170" target="_blank"
+          rel="noopener">github.com/wcaescala/Pathfinding-170</a> &nbsp;&middot;&nbsp;
+        <b>Slides:</b> <a href="https://canva.link/qjbmayikak26mea" target="_blank" rel="noopener">Canva
+          Presentation</a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Pathfinding Algorithm Evaluation on Dragon Age 2 Benchmark Maps &middot; CMSC 170
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
